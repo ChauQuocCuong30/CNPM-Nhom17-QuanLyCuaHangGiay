@@ -1,6 +1,10 @@
 package org.example.cnpm_nhom17.database_helper;
 
+import org.example.cnpm_nhom17.models.DanhMuc;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class XuLyDanhMuc {
     // =========================================================================
@@ -21,20 +25,72 @@ public class XuLyDanhMuc {
         }
     }
 
+    // Hàm lấy danh sách toàn bộ danh mục đổ lên bảng
+    public static List<DanhMuc> layDanhSachToanBoDanhMuc() {
+        List<DanhMuc> list = new ArrayList<>();
+        String sql = "SELECT * FROM DanhMuc ORDER BY MaDanhMuc ASC";
+        try (Connection conn = SQLite.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                list.add(new DanhMuc(rs.getInt("MaDanhMuc"), rs.getString("TenDanhMuc")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // Hàm cập nhật tên danh mục
+    public static boolean capNhatDanhMuc(int maDanhMuc, String tenDanhMucMoi) {
+        String sql = "UPDATE DanhMuc SET TenDanhMuc = ? WHERE MaDanhMuc = ?";
+        try (Connection conn = SQLite.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, tenDanhMucMoi);
+            pstmt.setInt(2, maDanhMuc);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi cập nhật danh mục (Có thể tên bị trùng): " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Hàm xóa danh mục
+    public static boolean xoaDanhMuc(int maDanhMuc) {
+        String sql = "DELETE FROM DanhMuc WHERE MaDanhMuc = ?";
+        try (Connection conn = SQLite.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, maDanhMuc);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi xóa danh mục (Danh mục có thể đang chứa sản phẩm): " + e.getMessage());
+            return false;
+        }
+    }
+
     // =========================================================================
     // 2. QUẢN LÝ SẢN PHẨM GỐC (Ví dụ: Nike Air Force 1)
     // =========================================================================
 
-    // Hàm thêm Sản phẩm gốc mới (Giá vốn sẽ mặc định là 0 cho đến khi có phiếu nhập hàng)
-    public static int themSanPhamMoi(String tenSanPham, int maDanhMuc, double giaBanHienTai, String moTa) {
-        String sql = "INSERT INTO SanPham (TenSanPham, MaDanhMuc, GiaBanHienTai, MoTa) VALUES (?, ?, ?, ?)";
+    // Hàm thêm Sản phẩm gốc mới
+    public static int themSanPhamMoi(String tenSanPham, int maDanhMuc, int maNhaCungCap, double giaNhap, double giaBanHienTai, String moTa) {
+        String sql = "INSERT INTO SanPham (TenSanPham, MaDanhMuc, MaNhaCungCap, GiaNhap, GiaBanHienTai, MoTa) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = SQLite.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, tenSanPham);
-            if (maDanhMuc > 0) pstmt.setInt(2, maDanhMuc); else pstmt.setNull(2, java.sql.Types.INTEGER);
-            pstmt.setDouble(3, giaBanHienTai);
-            pstmt.setString(4, moTa);
+
+            // Xử lý Danh Mục
+            if (maDanhMuc > 0) pstmt.setInt(2, maDanhMuc);
+            else pstmt.setNull(2, java.sql.Types.INTEGER);
+
+            // Xử lý Nhà Cung Cấp
+            if (maNhaCungCap > 0) pstmt.setInt(3, maNhaCungCap);
+            else pstmt.setNull(3, java.sql.Types.INTEGER);
+
+            pstmt.setDouble(4, giaNhap);
+            pstmt.setDouble(5, giaBanHienTai);
+            pstmt.setString(6, moTa);
 
             pstmt.executeUpdate();
 
@@ -46,6 +102,45 @@ public class XuLyDanhMuc {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    // Hàm cập nhật toàn bộ thông tin của Sản phẩm gốc
+    public static boolean capNhatThongTinSanPham(int maSanPham, String tenSanPham, int maDanhMuc, int maNhaCungCap, double giaNhap, double giaBan, String moTa) {
+        String sql = "UPDATE SanPham SET TenSanPham = ?, MaDanhMuc = ?, MaNhaCungCap = ?, GiaNhap = ?, GiaBanHienTai = ?, MoTa = ? WHERE MaSanPham = ?";
+        try (Connection conn = SQLite.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, tenSanPham);
+
+            if (maDanhMuc > 0) pstmt.setInt(2, maDanhMuc);
+            else pstmt.setNull(2, java.sql.Types.INTEGER);
+
+            if (maNhaCungCap > 0) pstmt.setInt(3, maNhaCungCap);
+            else pstmt.setNull(3, java.sql.Types.INTEGER);
+
+            pstmt.setDouble(4, giaNhap);
+            pstmt.setDouble(5, giaBan);
+            pstmt.setString(6, moTa);
+            pstmt.setInt(7, maSanPham);
+
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Hàm xóa Sản phẩm gốc
+    public static boolean xoaSanPhamGoc(int maSanPham) {
+        String sql = "DELETE FROM SanPham WHERE MaSanPham = ?";
+        try (Connection conn = SQLite.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, maSanPham);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi xóa sản phẩm gốc: " + e.getMessage());
+            return false;
+        }
     }
 
     // Hàm cập nhật lại Giá Bán cho sản phẩm (khi muốn thay đổi giá niêm yết)

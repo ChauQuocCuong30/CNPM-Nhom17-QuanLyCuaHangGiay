@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:controller="org.example.cnpm_nhom17.Controller.QuanLyKhachHangController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #2c3e50;" BorderPane.alignment="CENTER">
+            <padding><Insets bottom="15.0" left="20.0" right="20.0" top="15.0" /></padding>
+            <children>
+                <Button mnemonicParsing="false" onAction="#quayVeTrangBanHang" text="⬅ Quay lại Bán hàng" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                <Label text="QUẢN LÝ THÔNG TIN KHÁCH HÀNG" textFill="WHITE">
+                    <font><Font name="System Bold" size="20.0" /></font>
+                </Label>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="15.0" BorderPane.alignment="CENTER">
+            <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+            <children>
+
+                <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <children>
+                                <Label text="Tìm kiếm nhanh:" />
+                                <TextField fx:id="txtTimKiem" promptText="Nhập tên hoặc số điện thoại..." prefWidth="300.0" />
+                                <Button text="Làm mới" onAction="#taiDuLieuKhachHang" style="-fx-cursor: hand;" />
+                            </children>
+                        </HBox>
+                        <TableView fx:id="bangKhachHang" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn prefWidth="100.0" text="Mã KH" />
+                                <TableColumn prefWidth="250.0" text="Họ và Tên" />
+                                <TableColumn prefWidth="180.0" text="Số Điện Thoại" />
+                                <TableColumn prefWidth="150.0" text="Điểm Tích Lũy" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <VBox spacing="15.0" prefWidth="350.0">
+                    <children>
+
+                        <VBox spacing="10.0" style="-fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-padding: 15; -fx-background-color: #f8f9fa;">
+                            <children>
+                                <Label text="QUY ĐỊNH TÍCH ĐIỂM">
+                                    <font><Font name="System Bold" size="16.0" /></font>
+                                </Label>
+                                <Separator />
+                                <VBox spacing="10.0">
+                                    <Label text="Tỉ lệ quy đổi (VNĐ cho 1 Điểm):" />
+                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                        <TextField fx:id="txtTiLeQuyDoi" text="10000" prefHeight="35.0" HBox.hgrow="ALWAYS" style="-fx-font-weight: bold; -fx-alignment: center-right;" />
+                                        <Label text="VNĐ = 1 Điểm" style="-fx-font-weight: bold;"/>
+                                    </HBox>
+                                    <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#xuLyCapNhatTiLe" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="LƯU TỈ LỆ MỚI" prefHeight="35.0"/>
+                                </VBox>
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="15.0" style="-fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-padding: 15; -fx-background-color: #f8f9fa;">
+                            <children>
+                                <Label text="THÔNG TIN CHI TIẾT">
+                                    <font><Font name="System Bold" size="16.0" /></font>
+                                </Label>
+                                <Separator />
+
+                                <VBox spacing="5.0">
+                                    <Label text="Họ và tên khách hàng:" />
+                                    <TextField fx:id="txtHoTen" promptText="VD: Nguyễn Văn A" prefHeight="35.0" />
+                                </VBox>
+
+                                <VBox spacing="5.0">
+                                    <Label text="Số điện thoại:" />
+                                    <TextField fx:id="txtSoDienThoai" promptText="VD: 0987654321" prefHeight="35.0" />
+                                </VBox>
+
+                                <VBox spacing="5.0">
+                                    <Label text="Điểm tích lũy:" />
+                                    <TextField fx:id="txtDiemTichLuy" promptText="Mặc định là 0 khi thêm mới" prefHeight="35.0" />
+                                </VBox>
+
+                                <Separator />
+
+                                <GridPane hgap="10.0" vgap="10.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Button maxWidth="Infinity" maxHeight="Infinity" mnemonicParsing="false" onAction="#xuLyThemKhachHang" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="THÊM MỚI" />
+                                        <Button maxWidth="Infinity" maxHeight="Infinity" mnemonicParsing="false" onAction="#xuLyCapNhatKhachHang" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="CẬP NHẬT" GridPane.columnIndex="1" />
+                                        <Button maxWidth="Infinity" maxHeight="Infinity" mnemonicParsing="false" onAction="#xuLyXoaKhachHang" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="XÓA KHÁCH" GridPane.rowIndex="1" />
+                                        <Button maxWidth="Infinity" maxHeight="Infinity" mnemonicParsing="false" onAction="#xuLyXoaTrangForm" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="LÀM TRỐNG" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </VBox>
+
+            </children>
+        </HBox>
+    </center>
+</BorderPane>

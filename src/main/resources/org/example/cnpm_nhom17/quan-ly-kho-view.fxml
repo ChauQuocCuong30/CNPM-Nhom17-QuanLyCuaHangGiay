@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:controller="org.example.cnpm_nhom17.Controller.QuanLyKhoController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #34495e;" BorderPane.alignment="CENTER">
+            <padding><Insets bottom="15.0" left="20.0" right="20.0" top="15.0" /></padding>
+            <children>
+                <Button mnemonicParsing="false" onAction="#quayVeTrangBanHang" text="⬅ Quay lại Bán hàng" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand;"/>
+                <Label text="HỆ THỐNG QUẢN LÝ KHO &amp; SẢN PHẨM" textFill="WHITE">
+                    <font><Font name="System Bold" size="20.0" /></font>
+                </Label>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+                <Tab text="1. Tồn Kho &amp; Cảnh báo">
+                    <content>
+                        <VBox spacing="10.0">
+                            <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+                            <children>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <TextField fx:id="txtTimKiemKho" promptText="Tìm mã vạch, tên giày..." prefWidth="300.0" />
+                                    <Button text="Làm mới" onAction="#taiDuLieuKho" />
+                                    <Label text="🔴 Các dòng màu đỏ là sản phẩm đã chạm mức cảnh báo hết hàng" textFill="#d32f2f">
+                                        <font><Font name="System Italic" size="13.0" /></font>
+                                    </Label>
+                                </HBox>
+                                <TableView fx:id="bangKho" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn prefWidth="120.0" text="Mã vạch" />
+                                        <TableColumn prefWidth="250.0" text="Tên Giày" />
+                                        <TableColumn prefWidth="60.0" text="Size" />
+                                        <TableColumn prefWidth="100.0" text="Màu sắc" />
+                                        <TableColumn prefWidth="120.0" text="Giá vốn (VND)" />
+                                        <TableColumn prefWidth="120.0" text="Giá bán (VND)" />
+                                        <TableColumn prefWidth="90.0" text="Tồn Kho" />
+                                        <TableColumn prefWidth="90.0" text="Mức cảnh báo" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <Tab text="2. Nhập Hàng (Quét mã)">
+                    <content>
+                        <VBox spacing="15.0" alignment="CENTER">
+                            <padding><Insets bottom="30.0" left="100.0" right="100.0" top="30.0" /></padding>
+                            <Label text="PHIẾU NHẬP HÀNG MỚI"><font><Font name="System Bold" size="24.0" /></font></Label>
+
+                            <VBox spacing="10.0" maxWidth="500.0">
+
+                                <Label text="1. Chọn thông tin phiếu nhập:">
+                                    <font><Font name="System Bold" size="13.0" /></font>
+                                </Label>
+                                <HBox spacing="10.0">
+                                    <ComboBox fx:id="cbNhanVienNhap" promptText="-- Chọn Nhân Viên --" prefHeight="35.0" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                    <ComboBox fx:id="cbNhaCungCap" promptText="-- Chọn Nhà Cung Cấp --" prefHeight="35.0" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                </HBox>
+                                <Separator />
+
+                                <Label text="2. Quét hoặc Nhập tay mã vạch sản phẩm:">
+                                    <font><Font name="System Bold" size="13.0" /></font>
+                                </Label>
+                                <HBox spacing="10.0">
+                                    <TextField fx:id="txtNhapBarcode" promptText="Nhập mã vạch và nhấn Enter..." prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                                    <Button text="Kiểm tra mã" onAction="#timSanPhamDeNhap" prefHeight="40.0" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+                                </HBox>
+
+                                <Label fx:id="lblNhapTenGiay" text="Chưa xác định sản phẩm" textFill="#2980b9"><font><Font name="System Bold" size="14.0" /></font></Label>
+
+                                <Label text="3. Số lượng nhập vào kho:">
+                                    <font><Font name="System Bold" size="13.0" /></font>
+                                </Label>
+                                <TextField fx:id="txtNhapSoLuong" promptText="VD: 50" prefHeight="35.0" />
+
+                                <Label text="4. Giá vốn (Giá nhập) của lô hàng này (VND):">
+                                    <font><Font name="System Bold" size="13.0" /></font>
+                                </Label>
+                                <TextField fx:id="txtNhapGiaVon" promptText="VD: 1500000" prefHeight="35.0" />
+                                <Label text="* Hệ thống sẽ tự động tính toán lại giá vốn bình quân hoặc lưu giá mới nhất vào bảng Sản Phẩm." textFill="#7f8c8d"><font><Font size="11.0" /></font></Label>
+                            </VBox>
+
+                            <Button text="XÁC NHẬN NHẬP KHO" onAction="#xuLyNhapKho" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 30 10 30; -fx-cursor: hand;" />
+                        </VBox>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+</BorderPane>

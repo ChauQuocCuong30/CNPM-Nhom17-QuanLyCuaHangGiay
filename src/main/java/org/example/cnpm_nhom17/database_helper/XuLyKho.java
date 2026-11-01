@@ -1,5 +1,8 @@
 package org.example.cnpm_nhom17.database_helper;
 
+import org.example.cnpm_nhom17.models.CanhBaoTonKho;
+import org.example.cnpm_nhom17.models.NhanVien; // Thêm thư viện NhanVien
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XyLyKho {
+public class XuLyKho {
 
     // Lớp trung gian nhận dữ liệu từ màn hình Nhập Hàng & Mã vạch
     public static class ItemNhap {
@@ -143,8 +146,9 @@ public class XyLyKho {
     // =========================================================================
     // HÀM 2: CẢNH BÁO HẾT HÀNG
     // =========================================================================
-    public static List<String> layDanhSachCanhBaoHetHang() {
-        List<String> danhSachCanhBao = new ArrayList<>();
+    public static List<CanhBaoTonKho> layDanhSachCanhBaoHetHang() {
+        List<CanhBaoTonKho> danhSachCanhBao = new ArrayList<>();
+
         String sql = "SELECT sp.TenSanPham, ct.MauSac, ct.Size, ct.SoLuongTon, ct.MucCanhBaoToiThieu, ct.Barcode " +
                 "FROM ChiTietSanPham ct JOIN SanPham sp ON ct.MaSanPham = sp.MaSanPham " +
                 "WHERE ct.SoLuongTon <= ct.MucCanhBaoToiThieu";
@@ -154,14 +158,103 @@ public class XyLyKho {
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                String thongBao = String.format("CẢNH BÁO: %s (Màu: %s, Size: %d) - Barcode: %s | Tồn kho: %d (Mức tối thiểu: %d)",
-                        rs.getString("TenSanPham"), rs.getString("MauSac"), rs.getInt("Size"),
-                        rs.getString("Barcode"), rs.getInt("SoLuongTon"), rs.getInt("MucCanhBaoToiThieu"));
-                danhSachCanhBao.add(thongBao);
+                String ten = rs.getString("TenSanPham");
+                String mau = rs.getString("MauSac");
+                int size = rs.getInt("Size");
+                String barcode = rs.getString("Barcode");
+                int ton = rs.getInt("SoLuongTon");
+                int min = rs.getInt("MucCanhBaoToiThieu");
+
+                danhSachCanhBao.add(new CanhBaoTonKho(ten, mau, size, barcode, ton, min));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return danhSachCanhBao;
+    }
+
+    // =========================================================================
+    // HÀM 3: CẬP NHẬT THÔNG TIN CHI TIẾT SẢN PHẨM (Form bên phải)
+    // =========================================================================
+    // Cho phép sửa Barcode, Size, Màu sắc và Mức cảnh báo của 1 đôi giày
+    public static boolean capNhatChiTietSanPham(String barcodeCu, String barcodeMoi, int size, String mauSac, int mucCanhBao) {
+        String sql = "UPDATE ChiTietSanPham SET Barcode = ?, Size = ?, MauSac = ?, MucCanhBaoToiThieu = ? WHERE Barcode = ?";
+        try (Connection conn = SQLite.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, barcodeMoi);
+            pstmt.setInt(2, size);
+            pstmt.setString(3, mauSac);
+            pstmt.setInt(4, mucCanhBao);
+            pstmt.setString(5, barcodeCu);
+
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi cập nhật sản phẩm (Có thể Barcode mới bị trùng): " + e.getMessage());
+            return false;
+        }
+    }
+
+    // =========================================================================
+    // HÀM 4: XÓA SẢN PHẨM KHỎI KHO (Nút Xóa)
+    // =========================================================================
+    // Xóa dựa trên Barcode
+    public static boolean xoaChiTietSanPham(String barcode) {
+        String sql = "DELETE FROM ChiTietSanPham WHERE Barcode = ?";
+        try (Connection conn = SQLite.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, barcode);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi xóa sản phẩm: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // =========================================================================
+    // HÀM 5: LẤY DANH SÁCH NHÀ CUNG CẤP
+    // =========================================================================
+    public static List<String> layDanhSachTenNhaCungCap() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT MaNhaCungCap, TenNhaCungCap FROM NhaCungCap";
+        try (Connection conn = SQLite.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(rs.getInt("MaNhaCungCap") + " - " + rs.getString("TenNhaCungCap"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // =========================================================================
+    // HÀM 6: LẤY DANH SÁCH NHÂN VIÊN KHO VÀ QUẢN LÝ (MỚI THÊM)
+    // =========================================================================
+    public static List<NhanVien> nhanvienKhoVaQuanLy() {
+        List<NhanVien> danhSachNhanVien = new ArrayList<>();
+        // Lọc nhân viên có chức vụ Kho hoặc QuanLy
+        String sql = "SELECT MaNhanVien, HoTen " +
+                "FROM NhanVien " +
+                "WHERE ChucVu = 'Kho' OR ChucVu = 'QuanLy'";
+
+        try (Connection conn = SQLite.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                int maNhanVien = rs.getInt("MaNhanVien");
+                String hoTen = rs.getString("HoTen");
+                NhanVien nv = new NhanVien(maNhanVien, hoTen);
+                danhSachNhanVien.add(nv);
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy danh sách NV Kho & Quản lý: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return danhSachNhanVien;
     }
 }

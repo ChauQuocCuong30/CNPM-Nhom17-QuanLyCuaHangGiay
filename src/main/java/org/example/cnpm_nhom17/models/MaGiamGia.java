@@ -10,6 +10,14 @@ public class MaGiamGia {
     private String ngayHetHan;
     private String trangThai;
 
+    public MaGiamGia(int maGiamGia, String codeVoucher, String loaiGiamGia, double giaTriGiam, int diemCanDoi) {
+        this.maGiamGia = maGiamGia;
+        this.codeVoucher = codeVoucher;
+        this.loaiGiamGia = loaiGiamGia;
+        this.giaTriGiam = giaTriGiam;
+        this.diemCanDoi = diemCanDoi;
+    }
+
     public MaGiamGia(int maGiamGia, String codeVoucher, String loaiGiamGia, double giaTriGiam, int diemCanDoi, int soLuong, String ngayHetHan, String trangThai) {
         this.maGiamGia = maGiamGia;
         this.codeVoucher = codeVoucher;

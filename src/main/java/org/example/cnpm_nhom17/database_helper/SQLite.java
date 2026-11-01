@@ -45,14 +45,18 @@ public class SQLite {
                 "    NgayHetHan TEXT NOT NULL,\n" +
                 "    TrangThai TEXT DEFAULT 'HoatDong'\n" +
                 ");\n" +
+
                 "CREATE TABLE IF NOT EXISTS SanPham (\n" +
                 "    MaSanPham INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "    TenSanPham TEXT NOT NULL,\n" +
                 "    MaDanhMuc INTEGER,\n" +
+                "    MaNhaCungCap INTEGER,\n" +
+                "    GiaNhap REAL DEFAULT 0 CHECK (GiaNhap >= 0),\n" +
                 "    GiaVonHienTai REAL DEFAULT 0 CHECK (GiaVonHienTai >= 0),\n" +
                 "    GiaBanHienTai REAL DEFAULT 0 CHECK (GiaBanHienTai >= 0),\n" +
                 "    MoTa TEXT,\n" +
-                "    FOREIGN KEY(MaDanhMuc) REFERENCES DanhMuc(MaDanhMuc) ON DELETE SET NULL\n" +
+                "    FOREIGN KEY(MaDanhMuc) REFERENCES DanhMuc(MaDanhMuc) ON DELETE SET NULL,\n" +
+                "    FOREIGN KEY(MaNhaCungCap) REFERENCES NhaCungCap(MaNhaCungCap) ON DELETE SET NULL\n" +
                 ");\n" +
                 "CREATE TABLE IF NOT EXISTS ChiTietSanPham (\n" +
                 "    MaChiTietSanPham INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
@@ -68,7 +72,7 @@ public class SQLite {
                 "    MaPhieuNhap INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "    MaNhaCungCap INTEGER,\n" +
                 "    MaNhanVien INTEGER,\n" +
-                "    NgayNhap TEXT DEFAULT CURRENT_TIMESTAMP,\n" +
+                "    NgayNhap TEXT DEFAULT (datetime('now', 'localtime')),\n" +
                 "    TongTien REAL DEFAULT 0,\n" +
                 "    FOREIGN KEY(MaNhaCungCap) REFERENCES NhaCungCap(MaNhaCungCap),\n" +
                 "    FOREIGN KEY(MaNhanVien) REFERENCES NhanVien(MaNhanVien)\n" +
@@ -87,7 +91,7 @@ public class SQLite {
                 "    MaKhachHang INTEGER,\n" +
                 "    MaNhanVien INTEGER,\n" +
                 "    MaGiamGia INTEGER,\n" +
-                "    NgayTao TEXT DEFAULT CURRENT_TIMESTAMP,\n" +
+                "    NgayTao TEXT DEFAULT (datetime('now', 'localtime')),\n" +
                 "    TongTienTruocGiam REAL NOT NULL,\n" +
                 "    SoTienGiam REAL DEFAULT 0,\n" +
                 "    ThanhTien REAL NOT NULL,\n" +
@@ -105,16 +109,25 @@ public class SQLite {
                 "    ThanhTien REAL NOT NULL,\n" +
                 "    FOREIGN KEY(MaHoaDon) REFERENCES HoaDon(MaHoaDon) ON DELETE CASCADE,\n" +
                 "    FOREIGN KEY(MaChiTietSanPham) REFERENCES ChiTietSanPham(MaChiTietSanPham)\n" +
-                ");";
+                ");\n" +
+                "CREATE TRIGGER IF NOT EXISTS trg_MaGiamGia_HetHang\n" +
+                "AFTER UPDATE OF SoLuong ON MaGiamGia\n" +
+                "FOR EACH ROW\n" +
+                "WHEN NEW.SoLuong <= 0 AND NEW.TrangThai = 'HoatDong'\n" +
+                "BEGIN\n" +
+                "    UPDATE MaGiamGia SET TrangThai = 'Het hang' WHERE MaGiamGia = NEW.MaGiamGia;\n" +
+                "END;\n" +
+                "CREATE TRIGGER IF NOT EXISTS trg_MaGiamGia_HetHan\n" +
+                "AFTER UPDATE ON MaGiamGia\n" +
+                "FOR EACH ROW\n" +
+                "WHEN NEW.NgayHetHan < date('now') AND NEW.TrangThai = 'HoatDong'\n" +
+                "BEGIN\n" +
+                "    UPDATE MaGiamGia SET TrangThai = 'Het han' WHERE MaGiamGia = NEW.MaGiamGia;\n" +
+                "END;";
 
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
-            String[] sqlStatements = sql.split(";");
-            for (String statement : sqlStatements) {
-                if (!statement.trim().isEmpty()) {
-                    stmt.execute(statement);
-                }
-            }
+            stmt.executeUpdate(sql);
             System.out.println("Đã khởi tạo cơ sở dữ liệu SQLite thành công!");
         } catch (SQLException e) {
             System.out.println("Lỗi khi khởi tạo CSDL: " + e.getMessage());

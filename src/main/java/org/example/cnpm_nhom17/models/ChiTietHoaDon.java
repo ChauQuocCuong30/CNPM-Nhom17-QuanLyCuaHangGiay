@@ -19,6 +19,9 @@ public class ChiTietHoaDon {
         this.thanhTien = thanhTien;
     }
 
+    public ChiTietHoaDon(int maChiTietSanPham, String tenSanPham, int soLuongBan, double giaBanTaiThoiDiem, double thanhTien) {
+    }
+
     public int getMaChiTietHoaDon() {
         return maChiTietHoaDon;
     }

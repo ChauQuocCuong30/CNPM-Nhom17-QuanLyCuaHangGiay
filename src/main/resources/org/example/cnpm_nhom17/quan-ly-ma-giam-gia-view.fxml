@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<BorderPane fx:controller="org.example.cnpm_nhom17.Controller.QuanLyMaGiamGiaController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #2c3e50;" BorderPane.alignment="CENTER">
+            <padding><Insets bottom="15.0" left="20.0" right="20.0" top="15.0" /></padding>
+            <children>
+                <Button mnemonicParsing="false" onAction="#quayVeTrangBanHang" text="⬅ Quay lại Bán hàng" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                <Label text="QUẢN LÝ MÃ GIẢM GIÁ (VOUCHER)" textFill="WHITE">
+                    <font><Font name="System Bold" size="20.0" /></font>
+                </Label>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="15.0" BorderPane.alignment="CENTER">
+            <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+            <children>
+
+                <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label text="Tìm mã voucher:" />
+                            <TextField fx:id="txtTimKiem" promptText="Nhập code voucher..." prefWidth="300.0" />
+                            <Button text="Làm mới" onAction="#taiDuLieuVoucher" style="-fx-cursor: hand;" />
+                        </HBox>
+                        <TableView fx:id="bangVoucher" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn prefWidth="70.0" text="Mã ID" />
+                                <TableColumn prefWidth="140.0" text="Code Voucher" />
+                                <TableColumn prefWidth="100.0" text="Loại Giảm" />
+                                <TableColumn prefWidth="100.0" text="Giá Trị Giảm" />
+                                <TableColumn prefWidth="80.0" text="Số Lượng" />
+                                <TableColumn prefWidth="100.0" text="Mức Giá Cần" />
+                                <TableColumn prefWidth="110.0" text="Ngày Hết Hạn" />
+                                <TableColumn prefWidth="90.0" text="Trạng Thái" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <VBox spacing="15.0" prefWidth="350.0" style="-fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-padding: 15; -fx-background-color: #f8f9fa;">
+                    <children>
+                        <Label text="THÔNG TIN VOUCHER">
+                            <font><Font name="System Bold" size="16.0" /></font>
+                        </Label>
+                        <Separator />
+
+                        <VBox spacing="5.0">
+                            <Label text="Code Voucher:" />
+                            <TextField fx:id="txtCodeVoucher" promptText="VD: GIAYMOI10" prefHeight="35.0" />
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <Label text="Loại Giảm Giá:" />
+                            <ComboBox fx:id="cbLoaiGiamGia" prefHeight="35.0" prefWidth="320.0" promptText="-- Chọn loại --">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="PhanTram" />
+                                        <String fx:value="SoTien" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                        </VBox>
+
+                        <HBox spacing="10.0">
+                            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                <Label text="Giá trị giảm:" />
+                                <TextField fx:id="txtGiaTriGiam" promptText="VD: 10 (%), 50000 (VNĐ)" prefHeight="35.0" />
+                            </VBox>
+                            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                <Label text="Số lượng:" />
+                                <TextField fx:id="txtSoLuong" promptText="VD: 50" prefHeight="35.0" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox spacing="10.0">
+                            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                <Label text="Mức giá cần đạt:" />
+                                <TextField fx:id="txtDiemCanDoi" promptText="VD: 1500000" prefHeight="35.0" />
+                            </VBox>
+                            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                <Label text="Ngày hết hạn:" />
+                                <DatePicker fx:id="dpNgayHetHan" prefHeight="35.0" prefWidth="160.0"/>
+                            </VBox>
+                        </HBox>
+
+                        <VBox spacing="5.0">
+                            <Label text="Trạng Thái:" />
+                            <ComboBox fx:id="cbTrangThai" prefHeight="35.0" prefWidth="320.0">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="HoatDong" />
+                                        <String fx:value="HetHan" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                        </VBox>
+
+                        <Separator />
+
+                        <GridPane hgap="10.0" vgap="10.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Button maxWidth="Infinity" maxHeight="Infinity" onAction="#xuLyThemVoucher" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="THÊM MỚI" />
+                                <Button maxWidth="Infinity" maxHeight="Infinity" onAction="#xuLyCapNhatVoucher" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="CẬP NHẬT" GridPane.columnIndex="1" />
+                                <Button maxWidth="Infinity" maxHeight="Infinity" onAction="#xuLyXoaVoucher" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="XÓA VOUCHER" GridPane.rowIndex="1" />
+                                <Button maxWidth="Infinity" maxHeight="Infinity" onAction="#xuLyXoaTrangForm" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="LÀM TRỐNG" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
+
+            </children>
+        </HBox>
+    </center>
+</BorderPane>

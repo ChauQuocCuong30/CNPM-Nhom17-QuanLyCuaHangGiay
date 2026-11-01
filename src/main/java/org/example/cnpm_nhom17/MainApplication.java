@@ -13,6 +13,7 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         // 1. Khởi tạo Cơ sở dữ liệu
         SQLite.CreateDatabase();
+        //SQLite.napDuLieuMau();
 
         // 2. Tải giao diện màn hình chính
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));

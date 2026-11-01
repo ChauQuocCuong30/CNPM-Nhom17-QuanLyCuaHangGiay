@@ -5,6 +5,11 @@ public class NhanVien {
     private String hoTen;
     private String chucVu;
 
+    public NhanVien(int maNhanVien, String hoTen) {
+        this.maNhanVien = maNhanVien;
+        this.hoTen = hoTen;
+    }
+
     public NhanVien(int maNhanVien, String hoTen, String chucVu) {
         this.maNhanVien = maNhanVien;
         this.hoTen = hoTen;

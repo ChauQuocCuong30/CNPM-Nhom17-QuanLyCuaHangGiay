@@ -10,7 +10,7 @@ public class HoaDon {
     private double soTienGiam;
     private double thanhTien;
 
-    public HoaDon(int maHoaDon, Integer maKhachHang, int maNhanVien, Integer maGiamGia, String ngayTao, double tongTienTruocGiam, double soTienGiam, double thanhTien) {
+    public HoaDon(int maHoaDon, Integer maKhachHang, int maNhanVien, String ngayTao, double tongTienTruocGiam, double soTienGiam, double thanhTien) {
         this.maHoaDon = maHoaDon;
         this.maKhachHang = maKhachHang;
         this.maNhanVien = maNhanVien;

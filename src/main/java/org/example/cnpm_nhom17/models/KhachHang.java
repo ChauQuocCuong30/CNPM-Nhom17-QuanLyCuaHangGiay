@@ -13,6 +13,11 @@ public class KhachHang {
         this.diemTichLuy = diemTichLuy;
     }
 
+    public KhachHang(String hoTen, int diemTichLuy) {
+        this.hoTen = hoTen;
+        this.diemTichLuy = diemTichLuy;
+    }
+
     public int getMaKhachHang() {
         return maKhachHang;
     }
