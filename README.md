@@ -1,9 +1,7 @@
-from pathlib import Path
-import difflib
-
-readme = """# CNPM Nhóm 17 – Phần mềm quản lý cửa hàng giày
+# CNPM Nhóm 17 – Phần mềm quản lý cửa hàng giày
 
 Đồ án môn **Công nghệ phần mềm** – Trường Đại học Nha Trang. Thực hiện theo nhóm **3 người**.
+
 Ứng dụng desktop hỗ trợ quản lý bán hàng và kho cho cửa hàng giày: bán hàng tại quầy, quản lý tồn kho, khách hàng, nhân viên, mã giảm giá và thống kê.
 
 ## Công nghệ sử dụng
@@ -33,9 +31,22 @@ Cơ sở dữ liệu SQLite được tạo tự động khi chạy ứng dụng 
 
 **Yêu cầu:** JDK phù hợp với `pom.xml`, Maven (hoặc dùng `mvnw` có sẵn), IntelliJ IDEA (khuyến nghị).
 
+**Clone repository:**
+
 ```bash
-git clone <đường dẫn repo này>
-cd CNPM
+git clone https://github.com/ChauQuocCuong30/CNPM-Nhom17-QuanLyCuaHangGiay.git
+cd CNPM-Nhom17-QuanLyCuaHangGiay
+```
+
+**Chạy trên Windows (CMD/PowerShell):**
+
+```powershell
+.\mvnw.cmd clean javafx:run
+```
+
+**Chạy trên Linux/macOS hoặc Git Bash:**
+
+```bash
 ./mvnw clean javafx:run
 ```
 
@@ -43,7 +54,7 @@ Hoặc mở project bằng IntelliJ IDEA và chạy lớp `Launcher` (hàm `main
 
 ## Cấu trúc mã nguồn
 
-```
+```text
 src/main/java/org/example/cnpm_nhom17/
 ├── Controller/        # Xử lý giao diện: bán hàng, kho, hóa đơn, khách hàng, mã giảm giá...
 ├── models/            # Các lớp dữ liệu (SanPham, HoaDon, KhachHang...)
@@ -57,27 +68,6 @@ src/main/resources/    # Giao diện FXML
 
 | Thành viên | Phần phụ trách |
 |---|---|
-| Võ Đức Song Toàn | Giao diện + Thanh Toán |
+| Võ Đức Song Toàn | Giao diện + Thanh toán |
 | Châu Quốc Cường | Giao diện + Cơ sở dữ liệu |
 | Hà Văn Tuấn | Giao diện |
-"""
-old = """git clone <đường dẫn repo này>
-cd CNPM
-./mvnw clean javafx:run"""
-new = """git clone https://github.com/ChauQuocCuong30/CNPM-Nhom17-QuanLyCuaHangGiay.git
-cd CNPM-Nhom17-QuanLyCuaHangGiay
-./mvnw clean javafx:run"""
-assert readme.count(old)==1
-updated = readme.replace(old, new)
-updated=updated.replace(
-"Hoặc mở project bằng IntelliJ IDEA và chạy lớp `Launcher` (hàm `main` tạo database rồi mở giao diện).",
-"Trên Windows, có thể chạy lệnh `mvnw.cmd clean javafx:run` thay cho `./mvnw clean javafx:run`.\n\nHoặc mở project bằng IntelliJ IDEA và chạy lớp `Launcher` (hàm `main` tạo database rồi mở giao diện)."
-)
-out = Path("/mnt/data")
-readme_path=out/"README_CNPM_Nhom17_chinh_nhe.md"
-patch_path=out/"README_CNPM_Nhom17.patch"
-readme_path.write_text(updated,encoding="utf-8")
-patch="".join(difflib.unified_diff(readme.splitlines(keepends=True),updated.splitlines(keepends=True),fromfile="a/README.md",tofile="b/README.md"))
-patch_path.write_text(patch,encoding="utf-8")
-print(patch)
-print("Đã tạo:",readme_path.name, patch_path.name)
